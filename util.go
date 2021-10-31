@@ -44,7 +44,7 @@ type LoginRes struct {
 }
 
 func login(username string, password string) map[string]string {
-	body := strings.NewReader(fmt.Sprintf(`json={"M": "0", "P": "", "d": "4450ee855cb4a3230106be1eb0b241e2", "n": "%v", "nfy": "", "oi": "", "p": "%v", "pt": "3", "t": ""}`, username, password))
+	body := strings.NewReader(fmt.Sprintf(`json={"M": "0", "P": "", "d": "DEVICE_ID", "n": "%v", "nfy": "", "oi": "", "p": "%v", "pt": "3", "t": ""}`, username, password))
 	req, err := http.NewRequest("POST", "https://xat.com/web_gear/chat/mlogin2.php?v=1.55.4&m=7&", body)
 	if err != nil {
 		// handle err
