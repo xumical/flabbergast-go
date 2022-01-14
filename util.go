@@ -140,5 +140,5 @@ type chatLookup struct {
 	D   string `json:"d"`
 	G   string `json:"g"`
 	A   string `json:"a"`
-	Bot int    `json:"bot"`
+	Bot int    `json:"bot,string,omitempty"`
 }

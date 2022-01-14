@@ -137,6 +137,7 @@ func updateChats(hub *Hub) {
 	}
 	hub.save()
 	hub.mutex.Unlock()
+	MasterBot.sendPC(23232323, "Keep alive")
 }
 
 func lure(hub *Hub) {
