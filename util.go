@@ -136,9 +136,9 @@ func findChat(hub *Hub, name string) int {
 }
 
 type chatLookup struct {
-	ID  string `json:"id"`
-	D   string `json:"d"`
-	G   string `json:"g"`
-	A   string `json:"a"`
-	Bot int    `json:"bot,string,omitempty"`
+	ID string `json:"id"`
+	//D   string `json:"d"`
+	//G   string `json:"g"`
+	//A   string `json:"a"`
+	//Bot int    `json:"bot,string,omitempty"`
 }
