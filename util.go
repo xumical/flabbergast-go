@@ -71,6 +71,9 @@ func login(username string, password string) map[string]string {
 	if err != nil {
 		log.Fatal("could not unmarshall login response:", err)
 	}
+	if len(loginResJSON.V) == 0 {
+		log.Fatal("login contained error", string(content))
+	}
 
 	env, err := godotenv.Read()
 	if err != nil {
