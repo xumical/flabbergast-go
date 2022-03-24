@@ -68,13 +68,13 @@ func DoDefaultHandlers() {
 				"l3": 505,
 				"l2": 0,
 
-				"z": "m1.55.4,3",
+				"z": "m1.59,3",
 
 				"y": p.getAttrib("i"),
 
 				"p": 0,
 				"c": c.chatId,
-				"f": 2,
+				"f": 0,
 			},
 		}
 		for k, v := range c.hub.botInfo {
