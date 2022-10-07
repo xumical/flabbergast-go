@@ -85,6 +85,8 @@ func DoDefaultHandlers() {
 				k = "u"
 			case "n", "username":
 				k = "N"
+			case "m":
+				k = "M"
 			case "tag", "k2", "password":
 				continue
 			}
@@ -94,7 +96,7 @@ func DoDefaultHandlers() {
 		loginAuth.attr["a"] = "1306"
 		loginAuth.attr["h"] = "https://xat.com/PGO"
 		loginAuth.attr["v"] = 0
-		loginAuth.addOrder("cb", "Y", "l5", "l4", "l3", "l2", "y", "k", "k3", "d1", "z", "p", "c", "f", "u", "d0", "d2", "d3", "d20", "dx", "dt", "N", "n", "a", "h", "v")
+		loginAuth.addOrder("cb", "Y", "l5", "l4", "l3", "l2", "y", "k", "k3", "d1", "z", "p", "c", "f", "u", "d0", "d2", "d3", "d20", "dx", "M", "dt", "N", "n", "a", "h", "v")
 
 		if loginAuth.hasAttrib("d1") && p.getAttrib("c") >= loginAuth.getAttrib("d1") {
 			delete(loginAuth.attr, "d1")
@@ -196,13 +198,13 @@ func DoDefaultHandlers() {
 			spew.Dump(c.hub.botInfo)
 			err := godotenv.Write(c.hub.botInfo, "./.env")
 			if err != nil {
-				log.Fatal("could not save .env file")
+				log.Panic("could not save .env file")
 			}
 			return
 		}
 		env, err := godotenv.Read()
 		if err != nil {
-			log.Fatal("could not load .env file")
+			log.Panic("could not load .env file")
 		}
 
 		for k, v := range p.attr {
@@ -210,7 +212,7 @@ func DoDefaultHandlers() {
 		}
 		err = godotenv.Write(env, "./.env")
 		if err != nil {
-			log.Fatal("could not save .env file")
+			log.Panic("could not save .env file")
 		}
 		c.hub.botInfo = fetchGlobalBotInfo()
 
@@ -306,7 +308,7 @@ func newClient(hub *Hub, name string) *Client {
 	})
 
 	if err != nil {
-		log.Fatal("dial:", err)
+		log.Panic("dial:", err)
 	}
 
 	client := &Client{hub: hub, conn: c, send: make(chan []byte, 256), handlers: make(map[string]PacketHandler), parsed: make(chan *Packet, 10)}
@@ -320,7 +322,7 @@ func newClient(hub *Hub, name string) *Client {
 
 func (c *Client) doJoin() {
 	if c.chatId <= 0 {
-		log.Fatal("invalid chat id")
+		log.Panic("invalid chat id")
 	}
 	c.sendMessage(fmt.Sprintf("<y r=\"%v\" v=\"0\" u=\"%v\" z=\"8335799305056508195\" />", c.chatId, c.hub.botInfo["i"]))
 }

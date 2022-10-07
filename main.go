@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -41,6 +42,12 @@ const (
 var MasterBot *Client
 
 func newBot(chatName string, hub *Hub) *Client {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in newBot", r)
+		}
+	}()
+
 	client := newClient(hub, chatName)
 	if client == nil {
 		return nil
@@ -65,6 +72,9 @@ func main() {
 	go hub.run()
 
 	MasterBot = newBot(MasterChat, hub)
+	if MasterBot == nil {
+		log.Fatal("Master bot failed initial join to " + MasterChat)
+	}
 	MasterBot.setMaster(true)
 
 	for n := range hub.chatCache {
@@ -137,7 +147,14 @@ func updateChats(hub *Hub) {
 	}
 	hub.save()
 	hub.mutex.Unlock()
-	if MasterBot.isDone() {
+	if MasterBot == nil {
+		MasterBot = newBot(MasterChat, hub)
+		if MasterBot == nil {
+			log.Print("Master bot failed join to " + MasterChat)
+		} else {
+			MasterBot.setMaster(true)
+		}
+	} else if MasterBot.isDone() {
 		MasterBot.sendPC(23232323, "Keep alive")
 	}
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -55,9 +56,11 @@ func (h *Hub) run() {
 				close(client.parsed)
 				log.Printf("[DEAD] %v (%v) | Tot: %v\n ", client.chatName, client.chatId, len(h.clients))
 				if client.isMaster() {
+					MasterBot = nil
 					go func() {
-						MasterBot = newBot(client.chatName, h)
-						MasterBot.setMaster(true)
+						if MasterBot = newBot(client.chatName, h); MasterBot != nil {
+							MasterBot.setMaster(true)
+						}
 					}()
 				}
 			}
@@ -94,6 +97,11 @@ func (h *Hub) restore() {
 }
 
 func (h *Hub) save() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in config save", r)
+		}
+	}()
 	// rename main file -> .bk
 	// write data to new file
 	// if err, delete new file, rename .bk to old
@@ -153,11 +161,11 @@ func (h *Hub) save() {
 		log.Println("could not save, reverting:", err)
 		err = os.Remove(fn)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 		err = os.Rename(fn+bx, fn)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 	}
 	_ = os.Remove(fn + bx)

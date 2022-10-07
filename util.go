@@ -34,7 +34,7 @@ func fetchGlobalBotInfo() map[string]string {
 	}
 	env, err := godotenv.Read()
 	if err != nil {
-		log.Fatal("Could not load .env file", err)
+		log.Panic("Could not load .env file", err)
 	}
 	return env
 }
@@ -44,11 +44,11 @@ type LoginRes struct {
 }
 
 func login(username string, password string) map[string]string {
-	body := strings.NewReader(fmt.Sprintf(`json={"M": "0", "P": "", "d": "DEVICE_ID", "n": "%v", "nfy": "", "oi": "", "p": "%v", "pt": "3", "t": ""}`, username, password))
+	body := strings.NewReader(fmt.Sprintf(`json={"M": "0", "P": "", "d": "4450ee855cb4a3230106be1eb0b241e2", "n": "%v", "nfy": "", "oi": "", "p": "%v", "pt": "3", "t": ""}`, username, password))
 	req, err := http.NewRequest("POST", "https://xat.com/web_gear/chat/mlogin2.php?v=1.55.4&m=7&", body)
 	if err != nil {
 		// handle err
-		log.Fatal("http err:", err)
+		log.Panic("http err:", err)
 	}
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -57,27 +57,27 @@ func login(username string, password string) map[string]string {
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		// handle err
-		log.Fatal("could not login:", err)
+		log.Panic("could not login:", err)
 	}
 	defer resp.Body.Close()
 
 	content, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("could not read login response")
+		log.Panic("could not read login response")
 	}
 
 	var loginResJSON LoginRes
 	err = json.Unmarshal(content, &loginResJSON)
 	if err != nil {
-		log.Fatal("could not unmarshall login response:", err)
+		log.Panic("could not unmarshall login response:", err)
 	}
 	if len(loginResJSON.V) == 0 {
-		log.Fatal("login contained error", string(content))
+		log.Panic("login contained error", string(content))
 	}
 
 	env, err := godotenv.Read()
 	if err != nil {
-		log.Fatal("could not load .env file")
+		log.Panic("could not load .env file")
 	}
 
 	loginResPacket := parse([]byte(loginResJSON.V))[0]
@@ -86,7 +86,7 @@ func login(username string, password string) map[string]string {
 	}
 	err = godotenv.Write(env, "./.env")
 	if err != nil {
-		log.Fatal("could not save .env file")
+		log.Panic("could not save .env file")
 	}
 	return env
 }
